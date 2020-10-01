@@ -25,20 +25,12 @@ public class DescendingOrder {
     }
 
     public static int sortDesc(int i) {
+
         String result = Integer.toString(i).chars()
                 .boxed()
                 .map(obj -> String.valueOf(obj - '0'))
                 .sorted(reverseOrder())
                 .collect(Collectors.joining());
-
-/*        String result = intStream
-                .boxed()
-                .sorted(reverseOrder())
-                .map(String::valueOf)
-                .collect(Collectors.joining());*/
-
-
-        System.out.println(result);
 
         return Integer.valueOf(result);
     }
