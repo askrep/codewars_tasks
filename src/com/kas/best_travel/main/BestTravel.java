@@ -41,20 +41,23 @@ public class BestTravel {
 
         for (int index = 0; index < comb; index++) { //перебор по индексу элемента комбинации
 
-            for (int j = 0; j < ls.size()-1; j++) {
-                getLastPairComb(j, ls);
+            for (int j = 0; j < ls.size() - 1; j++) {
+                getLastPairComb(j, comb - index, ls);
             }
         }
 
         return null;
     }
 
-    private static void getLastPairComb(int start, List<Integer> ls) {
+    private static void getLastPairComb(int start, int count, List<Integer> ls) {
 
-        for (int j = start+1; j < ls.size(); j++) {
-            System.out.print(" "+start+"." + j);
-        }
-        System.out.println("");
+        if (count == 1) {
+            for (int j = start + 1; j < ls.size(); j++) {
+                System.out.print(" " + start + "." + j);
+            }
+            System.out.println("");
+        } else getLastPairComb(start + 1, count - 1, ls);
+
     }
 
     static int getNumberCombinations(int n, int k) {
