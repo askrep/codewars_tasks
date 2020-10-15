@@ -18,46 +18,50 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class BestTravel {
-    private static int length;
-    private static StringBuilder sb;
 
     public static void main(String[] args) {
         // write your code here
-        int size = 5;
-        int comb = 2;
 
-        List<Integer> ts = new ArrayList<>(Arrays.asList(50, 55, 56, 57, 58));
-        chooseBestSum(5, comb, ts);
+        int comb = 3;
 
 
-        length = ts.size();
+        List<Integer> ts = new ArrayList<>(Arrays.asList(50, 55, 56, 57, 58, 54));
 
-        System.out.println("\nNumber of comb = " + getNumberCombinations(size, comb));
-
+        System.out.println("\nNumber of comb = " + getNumberCombinations(ts.size(), comb));
+        chooseBestSum(6, 2, ts);
 
     }
 
     public static Integer chooseBestSum(int dist, int comb, List<Integer> ls) {
-
-        for (int index = 0; index < comb; index++) { //перебор по индексу элемента комбинации
-
-            for (int j = 0; j < ls.size() - 1; j++) {
-                getLastPairComb(j, comb - index, ls);
-            }
-        }
-
+        ArrayList<Integer> list = new ArrayList<>();
+        getNextPair(0, 1, comb, ls, list);
         return null;
     }
 
-    private static void getLastPairComb(int start, int count, List<Integer> ls) {
+    static void getNextPair(int start, int count, int comb, List<Integer> ls, List list) {
+        list.add(start);
 
-        if (count == 1) {
-            for (int j = start + 1; j < ls.size(); j++) {
-                System.out.print(" " + start + "." + j);
+        StringBuilder sb = new StringBuilder("");
+        for (int j = 1; j <= start; j++) {
+            sb.append("----");
+        }
+        sb.append("s=");
+
+        if (count < comb) {
+            for (int i = start; i < ls.size() - count; i++) {
+                int s = i + 1;
+                int c = count + 1;
+                System.out.print("\n" + sb.toString() + start + ";");
+                getNextPair(s, c, comb, ls, list);
             }
-            System.out.println("");
-        } else getLastPairComb(start + 1, count - 1, ls);
 
+        } else if (count == comb) {
+            System.out.print("\n" + sb.toString());
+            for (int i = start; i < ls.size(); i++) {
+                System.out.print(" ." + i);
+            }
+            return;
+        }
     }
 
     static int getNumberCombinations(int n, int k) {
