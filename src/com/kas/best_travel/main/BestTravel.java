@@ -2,7 +2,6 @@ package com.kas.best_travel.main;
 
 import java.math.BigInteger;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * John and Mary want to travel between a few towns A, B, C ...
@@ -18,50 +17,59 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class BestTravel {
+    static int testCount = 0; // test: to compare the number of items
 
     public static void main(String[] args) {
         // write your code here
+        int comb = 4;
 
-        int comb = 3;
+        List<Integer> ts = new ArrayList<>(Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1));
 
-
-        List<Integer> ts = new ArrayList<>(Arrays.asList(50, 55, 56, 57, 58, 54));
-
+        chooseBestSum(6, comb, ts);
         System.out.println("\nNumber of comb = " + getNumberCombinations(ts.size(), comb));
-        chooseBestSum(6, 2, ts);
-
+        System.out.println("TEST=" + testCount);
     }
 
     public static Integer chooseBestSum(int dist, int comb, List<Integer> ls) {
         ArrayList<Integer> list = new ArrayList<>();
-        getNextPair(0, 1, comb, ls, list);
+
+        getNextPairRecursive(0, 1, comb, ls, list);
         return null;
     }
 
-    static void getNextPair(int start, int count, int comb, List<Integer> ls, List list) {
-        list.add(start);
-
+    static void getNextPairRecursive(int start, int count, int comb, List<Integer> ls, List<Integer> list) {
         StringBuilder sb = new StringBuilder("");
-        for (int j = 1; j <= start; j++) {
-            sb.append("----");
-        }
-        sb.append("s=");
 
-        if (count < comb) {
-            for (int i = start; i < ls.size() - count; i++) {
-                int s = i + 1;
-                int c = count + 1;
-                System.out.print("\n" + sb.toString() + start + ";");
-                getNextPair(s, c, comb, ls, list);
+        if (count < comb) { // recursively call while looking for the last element
+            for (int index = start; index <= ls.size() - (comb - count); index++) {
+
+                //System.out.print("." + sb.toString() + index + "; ");
+
+                list.add(ls.get(index));
+                getNextPairRecursive(index + 1, count + 1, comb, ls, list);
+
+                list.remove(list.size() - 1);
             }
 
-        } else if (count == comb) {
-            System.out.print("\n" + sb.toString());
+        } else if (count == comb) { //when this is last item of combination
+            //System.out.print("\n" + sb.toString());
+
             for (int i = start; i < ls.size(); i++) {
-                System.out.print(" ." + i);
+                testCount++;
+                list.add(ls.get(i));
+
+                System.out.println(" :sum[" + i + "]=" + getSumDistances(list));
+                list.remove(list.size() - 1);
             }
+
+           // System.out.print("\n");
             return;
         }
+    }
+
+    private static Integer getSumDistances(List<Integer> list) {
+
+        return list.stream().reduce(0, (a, b) -> a + b);
     }
 
     static int getNumberCombinations(int n, int k) {
