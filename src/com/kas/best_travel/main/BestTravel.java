@@ -23,7 +23,7 @@ public class BestTravel {
         // write your code here
         int comb = 4;
 
-        List<Integer> ts = new ArrayList<>(Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1));
+        List<Integer> ts = new ArrayList<>(Arrays.asList(55, 1, 1, 1, 1, 1, 1, 1));
 
         chooseBestSum(6, comb, ts);
         System.out.println("\nNumber of comb = " + getNumberCombinations(ts.size(), comb));
@@ -33,38 +33,35 @@ public class BestTravel {
     public static Integer chooseBestSum(int dist, int comb, List<Integer> ls) {
         ArrayList<Integer> list = new ArrayList<>();
 
-        getNextPairRecursive(0, 1, comb, ls, list);
+        getNextPairRecursive(0, 1, comb, ls, list, dist);
         return null;
     }
 
-    static void getNextPairRecursive(int start, int count, int comb, List<Integer> ls, List<Integer> list) {
-        StringBuilder sb = new StringBuilder("");
+    static void getNextPairRecursive(int start, int count, int comb, List<Integer> ls, List<Integer> list, int dist) {
+
 
         if (count < comb) { // recursively call while looking for the last element
             for (int index = start; index <= ls.size() - (comb - count); index++) {
-
-                //System.out.print("." + sb.toString() + index + "; ");
-
                 list.add(ls.get(index));
-                getNextPairRecursive(index + 1, count + 1, comb, ls, list);
-
+                getNextPairRecursive(index + 1, count + 1, comb, ls, list, dist);
                 list.remove(list.size() - 1);
             }
 
         } else if (count == comb) { //when this is last item of combination
-            //System.out.print("\n" + sb.toString());
-
             for (int i = start; i < ls.size(); i++) {
                 testCount++;
-                list.add(ls.get(i));
 
+                list.add(ls.get(i));
                 System.out.println(" :sum[" + i + "]=" + getSumDistances(list));
+                isEqualDistace(getSumDistances(list), dist);
+
                 list.remove(list.size() - 1);
             }
-
-           // System.out.print("\n");
-            return;
         }
+    }
+
+    private static boolean isEqualDistace(Integer sumDistances, int maxDist) {
+        return sumDistances == maxDist;
     }
 
     private static Integer getSumDistances(List<Integer> list) {
