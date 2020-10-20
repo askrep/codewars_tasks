@@ -18,55 +18,61 @@ import java.util.*;
 
 public class BestTravel {
     static int testCount = 0; // test: to compare the number of items
+    private static int close_sum = 0;
+    private static Integer fin_sum = 0;
 
     public static void main(String[] args) {
         // write your code here
-        int comb = 4;
+        int dist = 230; // >=0
+        int comb = 3; // >=1
+        List<Integer> ts = new ArrayList<>(Arrays.asList(91, 74, 73, 85, 73, 81, 87)); // size >=1
 
-        List<Integer> ts = new ArrayList<>(Arrays.asList(55, 1, 1, 1, 1, 1, 1, 1));
-
-        chooseBestSum(6, comb, ts);
+        chooseBestSum(dist, comb, ts);
         System.out.println("\nNumber of comb = " + getNumberCombinations(ts.size(), comb));
         System.out.println("TEST=" + testCount);
     }
 
     public static Integer chooseBestSum(int dist, int comb, List<Integer> ls) {
         ArrayList<Integer> list = new ArrayList<>();
-
-        getNextPairRecursive(0, 1, comb, ls, list, dist);
-        return null;
+        if (ls.size() == 1) return null;
+        return (Integer) getNextPairRecursive(dist, comb, ls, 0, 1, list);
     }
 
-    static void getNextPairRecursive(int start, int count, int comb, List<Integer> ls, List<Integer> list, int dist) {
-
+    static Integer getNextPairRecursive(int dist, int comb, List<Integer> ls, int start, int count, List<Integer> elements) {
 
         if (count < comb) { // recursively call while looking for the last element
             for (int index = start; index <= ls.size() - (comb - count); index++) {
-                list.add(ls.get(index));
-                getNextPairRecursive(index + 1, count + 1, comb, ls, list, dist);
-                list.remove(list.size() - 1);
-            }
+                elements.add(ls.get(index));
+                //System.out.print(index);
+                fin_sum = getNextPairRecursive(dist, comb, ls, index + 1, count + 1, elements);
+                elements.remove(elements.size() - 1);
 
+                if (fin_sum == dist) return dist;
+                else if (fin_sum > close_sum) close_sum = fin_sum;
+
+            }
         } else if (count == comb) { //when this is last item of combination
             for (int i = start; i < ls.size(); i++) {
-                testCount++;
+                testCount++; //for test , delme
+                System.out.println("\nIndex of last=" + i); //for test , delme
 
-                list.add(ls.get(i));
-                System.out.println(" :sum[" + i + "]=" + getSumDistances(list));
-                isEqualDistace(getSumDistances(list), dist);
+                elements.add(ls.get(i));
+                Integer sum = getSumDistances(elements);
 
-                list.remove(list.size() - 1);
+                System.out.println(" :sum[" + i + "]=" + sum);
+
+                elements.remove(elements.size() - 1);
+
+                if (sum == dist) return dist;
+                if (sum < dist) return sum;
             }
         }
-    }
-
-    private static boolean isEqualDistace(Integer sumDistances, int maxDist) {
-        return sumDistances == maxDist;
+        return 0;
     }
 
     private static Integer getSumDistances(List<Integer> list) {
 
-        return list.stream().reduce(0, (a, b) -> a + b);
+        return list.stream().reduce(0, Integer::sum);
     }
 
     static int getNumberCombinations(int n, int k) {
