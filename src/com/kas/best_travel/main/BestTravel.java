@@ -31,13 +31,15 @@ public class BestTravel {
 
     }
 
-    public static Integer chooseBestSum(int dist, int comb, List<Integer> ls) {
+    public static Integer chooseBestSum(int t, int k, List<Integer> ls) {
         ArrayList<Integer> list = new ArrayList<>();
-        if (ls.size() == 1) return null;
-        return getNextPairRecursive(dist, comb, ls, 0, 1, list);
+        if (ls.size() <= 1 || k < 1 || t < 0) return null;
+        Integer result = getNextPairRecursive(t, k, ls, 0, 1, list);
+        if (result > t) return null;
+        return result;
     }
 
-    static Integer getNextPairRecursive(int distance, int comb, List<Integer> ls, int start, int count, List<Integer> elements) {
+    private static Integer getNextPairRecursive(int distance, int comb, List<Integer> ls, int start, int count, List<Integer> elements) {
 
         if (count < comb) { // recursively call while looking for the last element
             for (int index = start; index <= ls.size() - (comb - count); index++) {
@@ -46,7 +48,7 @@ public class BestTravel {
                 elements.remove(elements.size() - 1);
 
                 if (result_sum == distance) return distance;
-                else if (result_sum > close_sum) close_sum = result_sum;
+                else if (result_sum > close_sum) close_sum = result_sum; //looking for close smaller number
             }
         } else if (count == comb) { //when this is last item of combination
             for (int i = start; i < ls.size(); i++) {
@@ -56,7 +58,7 @@ public class BestTravel {
                 elements.remove(elements.size() - 1);
 
                 if (sum == distance) return distance;
-                if (sum < distance) return sum;
+                else if (sum < distance) return sum;
             }
         }
         return close_sum;
