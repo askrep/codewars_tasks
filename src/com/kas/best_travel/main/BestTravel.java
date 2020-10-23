@@ -18,7 +18,7 @@ import java.util.*;
 
 public class BestTravel {
 
-    private static int close_sum = 0;
+    //  private static int close_sum = 0;
 
     public static void main(String[] args) {
         // write your code here
@@ -32,14 +32,15 @@ public class BestTravel {
     }
 
     public static Integer chooseBestSum(int t, int k, List<Integer> ls) {
-        ArrayList<Integer> list = new ArrayList<>();
         if (ls.size() <= 1 || k < 1 || t < 0) return null;
+        ArrayList<Integer> list = new ArrayList<>();
         Integer result = getNextPairRecursive(t, k, ls, 0, 1, list);
-        if (result > t) return null;
+        if (result > t || result <= 0) return null;
         return result;
     }
 
     private static Integer getNextPairRecursive(int distance, int comb, List<Integer> ls, int start, int count, List<Integer> elements) {
+        int close_sum = 0;
 
         if (count < comb) { // recursively call while looking for the last element
             for (int index = start; index <= ls.size() - (comb - count); index++) {
@@ -58,7 +59,8 @@ public class BestTravel {
                 elements.remove(elements.size() - 1);
 
                 if (sum == distance) return distance;
-                else if (sum < distance) return sum;
+                else if (sum < distance && sum > close_sum) close_sum = sum;
+
             }
         }
         return close_sum;
